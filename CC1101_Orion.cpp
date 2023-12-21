@@ -1,7 +1,7 @@
 /*
   Orion_CC1101.cpp - CC1101 module library
   Copyright (c) 2010 Michael.
-    Author: Michael, <www.Orion_CC1101.com>
+    Author: Michael, <www.Orion.com>
     Version: November 12, 2010
 
   This library is designed to use CC1101/CC1100 module on Arduino platform.
@@ -10,7 +10,7 @@
   Just have fun!
   For the details, please refer to the datasheet of CC1100/CC1101.
 ----------------------------------------------------------------------------------------------------------------
-cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and publish Wilson Shen (Orion_CC1101).
+cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and publish Wilson Shen (Orion).
 ----------------------------------------------------------------------------------------------------------------
 */
 #include <SPI.h>
@@ -551,7 +551,7 @@ SpiWriteReg(CC1101_FSCTRL0, map(MHz, 300, 348, clb1[0], clb1[1]));
 if (MHz < 322.88){SpiWriteReg(CC1101_TEST0,0x0B);}
 else{
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 1){setPA(pa);}
 }
@@ -561,7 +561,7 @@ SpiWriteReg(CC1101_FSCTRL0, map(MHz, 378, 464, clb2[0], clb2[1]));
 if (MHz < 430.5){SpiWriteReg(CC1101_TEST0,0x0B);}
 else{
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 2){setPA(pa);}
 }
@@ -571,7 +571,7 @@ SpiWriteReg(CC1101_FSCTRL0, map(MHz, 779, 899, clb3[0], clb3[1]));
 if (MHz < 861){SpiWriteReg(CC1101_TEST0,0x0B);}
 else{
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 3){setPA(pa);}
 }
@@ -579,7 +579,7 @@ if (last_pa != 3){setPA(pa);}
 else if (MHz >= 900 && MHz <= 928){
 SpiWriteReg(CC1101_FSCTRL0, map(MHz, 900, 928, clb4[0], clb4[1]));
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 4){setPA(pa);}
 }
@@ -1281,7 +1281,8 @@ byte Orion_CC1101::CheckReceiveFlag(void)
 *FUNCTION NAME:ReceiveData
 *FUNCTION     :read data received from RXfifo
 *INPUT        :rxBuffer: buffer to store data
-*OUTPUT       :size of data received
+*INPUT        :size: number of bytes to be read from RX FIFO
+*OUTPUT       : 1 If successful, 0 otherwise
 ****************************************************************/
 bool Orion_CC1101::ReceiveData(byte *rxBuffer, byte size)
 {
@@ -1304,4 +1305,5 @@ bool Orion_CC1101::ReceiveData(byte *rxBuffer, byte size)
     return 0;
 	}
 }
-Orion_CC1101 Orion_CC1101_cc1101;
+
+Orion_CC1101 Orion_cc1101;

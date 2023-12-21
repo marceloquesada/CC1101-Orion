@@ -1,17 +1,18 @@
 {
-  "name": "SmartRC-CC1101-Driver-Lib",
-  "description": "This driver library can be used for many libraries that use a simple RF ASK module, with the advantages of the cc1101 module.It offers many direct setting options as in SmartRF Studio and calculates settings such as MHz directly.",
+  "name": "CC1101-Orion",
+  "description": "Customized version of the SmartRC-CC1101-Driver-Lib library modified for use on the Orion CubeSat Project",
   "keywords": "rf, radio, wireless, cc1101",
   "authors":
   {
-    "name": "Little Satan"
+    "name": "Little Satan",
+    "name": "Marcelo Q."
   },
   "repository":
   {
     "type": "git",
     "url": "https://github.com/LSatan/SmartRC-CC1101-Driver-Lib"
   },
-  "version": "2.5.7",
+  "version": "0.1",
   "frameworks": [
         "arduino"
   ],

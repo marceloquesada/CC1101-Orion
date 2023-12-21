@@ -1,7 +1,7 @@
 /*
-  ELECHOUSE_CC1101.cpp - CC1101 module library
+  Orion_CC1101.cpp - CC1101 module library
   Copyright (c) 2010 Michael.
-    Author: Michael, <www.elechouse.com>
+    Author: Michael, <www.Orion.com>
     Version: November 12, 2010
 
   This library is designed to use CC1101/CC1100 module on Arduino platform.
@@ -10,11 +10,11 @@
   Just have fun!
   For the details, please refer to the datasheet of CC1100/CC1101.
 ----------------------------------------------------------------------------------------------------------------
-cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and publish Wilson Shen (ELECHOUSE).
+cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and publish Wilson Shen (Orion).
 ----------------------------------------------------------------------------------------------------------------
 */
-#ifndef ELECHOUSE_CC1101_SRC_DRV_h
-#define ELECHOUSE_CC1101_SRC_DRV_h
+#ifndef CC1101_Orion_h
+#define CC1101_Orion_h
 
 #include <Arduino.h>
 
@@ -111,7 +111,7 @@ cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and 
 #define CC1101_RXFIFO       0x3F
 
 //************************************* class **************************************************//
-class ELECHOUSE_CC1101
+class Orion_CC1101
 {
 private:
   void SpiStart(void);
@@ -189,6 +189,6 @@ public:
   bool CheckRxFifo(int t);
 };
 
-extern ELECHOUSE_CC1101 ELECHOUSE_cc1101;
+extern Orion_CC1101 Orion_cc1101;
 
 #endif

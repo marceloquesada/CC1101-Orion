@@ -1,7 +1,7 @@
 /*
-  ELECHOUSE_CC1101.cpp - CC1101 module library
+  Orion_CC1101.cpp - CC1101 module library
   Copyright (c) 2010 Michael.
-    Author: Michael, <www.elechouse.com>
+    Author: Michael, <www.Orion_CC1101.com>
     Version: November 12, 2010
 
   This library is designed to use CC1101/CC1100 module on Arduino platform.
@@ -10,11 +10,11 @@
   Just have fun!
   For the details, please refer to the datasheet of CC1100/CC1101.
 ----------------------------------------------------------------------------------------------------------------
-cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and publish Wilson Shen (ELECHOUSE).
+cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and publish Wilson Shen (Orion_CC1101).
 ----------------------------------------------------------------------------------------------------------------
 */
 #include <SPI.h>
-#include "ELECHOUSE_CC1101_SRC_DRV.h"
+#include "CC1101_Orion.h"
 #include <Arduino.h>
 
 /****************************************************************/
@@ -83,7 +83,7 @@ uint8_t PA_TABLE_915[10] {0x03,0x0E,0x1E,0x27,0x38,0x8E,0x84,0xCC,0xC3,0xC0,};  
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SpiStart(void)
+void Orion_CC1101::SpiStart(void)
 {
   // initialize the SPI pins
   pinMode(SCK_PIN, OUTPUT);
@@ -104,7 +104,7 @@ void ELECHOUSE_CC1101::SpiStart(void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SpiEnd(void)
+void Orion_CC1101::SpiEnd(void)
 {
   // disable SPI
   SPI.endTransaction();
@@ -116,7 +116,7 @@ void ELECHOUSE_CC1101::SpiEnd(void)
 *INPUT        : none
 *OUTPUT       : none
 ****************************************************************/
-void ELECHOUSE_CC1101::GDO_Set (void)
+void Orion_CC1101::GDO_Set (void)
 {
 	pinMode(GDO0, OUTPUT);
 	pinMode(GDO2, INPUT);
@@ -127,7 +127,7 @@ void ELECHOUSE_CC1101::GDO_Set (void)
 *INPUT        : none
 *OUTPUT       : none
 ****************************************************************/
-void ELECHOUSE_CC1101::GDO0_Set (void)
+void Orion_CC1101::GDO0_Set (void)
 {
   pinMode(GDO0, INPUT);
 }
@@ -137,7 +137,7 @@ void ELECHOUSE_CC1101::GDO0_Set (void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Reset (void)
+void Orion_CC1101::Reset (void)
 {
 	digitalWrite(SS_PIN, LOW);
 	delay(1);
@@ -155,7 +155,7 @@ void ELECHOUSE_CC1101::Reset (void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Init(void)
+void Orion_CC1101::Init(void)
 {
   setSpi();
   SpiStart();                   //spi initialization
@@ -172,7 +172,7 @@ void ELECHOUSE_CC1101::Init(void)
 *INPUT        :addr: register address; value: register value
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SpiWriteReg(byte addr, byte value)
+void Orion_CC1101::SpiWriteReg(byte addr, byte value)
 {
   SpiStart();
   digitalWrite(SS_PIN, LOW);
@@ -188,7 +188,7 @@ void ELECHOUSE_CC1101::SpiWriteReg(byte addr, byte value)
 *INPUT        :addr: register address; buffer:register value array; num:number to write
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SpiWriteBurstReg(byte addr, byte *buffer, byte num)
+void Orion_CC1101::SpiWriteBurstReg(byte addr, byte *buffer, byte num)
 {
   byte i, temp;
   SpiStart();
@@ -209,7 +209,7 @@ void ELECHOUSE_CC1101::SpiWriteBurstReg(byte addr, byte *buffer, byte num)
 *INPUT        :strobe: command; //refer define in CC1101.h//
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SpiStrobe(byte strobe)
+void Orion_CC1101::SpiStrobe(byte strobe)
 {
   SpiStart();
   digitalWrite(SS_PIN, LOW);
@@ -224,7 +224,7 @@ void ELECHOUSE_CC1101::SpiStrobe(byte strobe)
 *INPUT        :addr: register address
 *OUTPUT       :register value
 ****************************************************************/
-byte ELECHOUSE_CC1101::SpiReadReg(byte addr) 
+byte Orion_CC1101::SpiReadReg(byte addr) 
 {
   byte temp, value;
   SpiStart();
@@ -244,7 +244,7 @@ byte ELECHOUSE_CC1101::SpiReadReg(byte addr)
 *INPUT        :addr: register address; buffer:array to store register value; num: number to read
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SpiReadBurstReg(byte addr, byte *buffer, byte num)
+void Orion_CC1101::SpiReadBurstReg(byte addr, byte *buffer, byte num)
 {
   byte i,temp;
   SpiStart();
@@ -266,7 +266,7 @@ void ELECHOUSE_CC1101::SpiReadBurstReg(byte addr, byte *buffer, byte num)
 *INPUT        :addr: register address
 *OUTPUT       :status value
 ****************************************************************/
-byte ELECHOUSE_CC1101::SpiReadStatus(byte addr) 
+byte Orion_CC1101::SpiReadStatus(byte addr) 
 {
   byte value,temp;
   SpiStart();
@@ -285,7 +285,7 @@ byte ELECHOUSE_CC1101::SpiReadStatus(byte addr)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setSpi(void){
+void Orion_CC1101::setSpi(void){
   if (spi == 0){
   #if defined __AVR_ATmega168__ || defined __AVR_ATmega328P__
   SCK_PIN = 13; MISO_PIN = 12; MOSI_PIN = 11; SS_PIN = 10;
@@ -306,7 +306,7 @@ void ELECHOUSE_CC1101::setSpi(void){
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setSpiPin(byte sck, byte miso, byte mosi, byte ss){
+void Orion_CC1101::setSpiPin(byte sck, byte miso, byte mosi, byte ss){
   spi = 1;
   SCK_PIN = sck;
   MISO_PIN = miso;
@@ -319,7 +319,7 @@ void ELECHOUSE_CC1101::setSpiPin(byte sck, byte miso, byte mosi, byte ss){
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::addSpiPin(byte sck, byte miso, byte mosi, byte ss, byte modul){
+void Orion_CC1101::addSpiPin(byte sck, byte miso, byte mosi, byte ss, byte modul){
   spi = 1;
   SCK_PIN_M[modul] = sck;
   MISO_PIN_M[modul] = miso;
@@ -332,7 +332,7 @@ void ELECHOUSE_CC1101::addSpiPin(byte sck, byte miso, byte mosi, byte ss, byte m
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setGDO(byte gdo0, byte gdo2){
+void Orion_CC1101::setGDO(byte gdo0, byte gdo2){
 GDO0 = gdo0;
 GDO2 = gdo2;  
 GDO_Set();
@@ -343,7 +343,7 @@ GDO_Set();
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setGDO0(byte gdo0){
+void Orion_CC1101::setGDO0(byte gdo0){
 GDO0 = gdo0;
 GDO0_Set();
 }
@@ -353,7 +353,7 @@ GDO0_Set();
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::addGDO(byte gdo0, byte gdo2, byte modul){
+void Orion_CC1101::addGDO(byte gdo0, byte gdo2, byte modul){
 GDO0_M[modul] = gdo0;
 GDO2_M[modul] = gdo2;  
 gdo_set=2;
@@ -365,7 +365,7 @@ GDO_Set();
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::addGDO0(byte gdo0, byte modul){
+void Orion_CC1101::addGDO0(byte gdo0, byte modul){
 GDO0_M[modul] = gdo0;
 gdo_set=1;
 GDO0_Set();
@@ -376,7 +376,7 @@ GDO0_Set();
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setModul(byte modul){
+void Orion_CC1101::setModul(byte modul){
   SCK_PIN = SCK_PIN_M[modul];
   MISO_PIN = MISO_PIN_M[modul];
   MOSI_PIN = MOSI_PIN_M[modul];
@@ -395,7 +395,7 @@ void ELECHOUSE_CC1101::setModul(byte modul){
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setCCMode(bool s){
+void Orion_CC1101::setCCMode(bool s){
 ccmode = s;
 if (ccmode == 1){
 SpiWriteReg(CC1101_IOCFG2,      0x0B);
@@ -418,7 +418,7 @@ setModulation(modulation);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setModulation(byte m){
+void Orion_CC1101::setModulation(byte m){
 if (m>4){m=4;}
 modulation = m;
 Split_MDMCFG2();
@@ -440,7 +440,7 @@ setPA(pa);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setPA(int p)
+void Orion_CC1101::setPA(int p)
 {
 int a;
 pa = p;
@@ -508,7 +508,7 @@ SpiWriteBurstReg(CC1101_PATABLE,PA_TABLE,8);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setMHZ(float mhz){
+void Orion_CC1101::setMHZ(float mhz){
 byte freq2 = 0;
 byte freq1 = 0;
 byte freq0 = 0;
@@ -544,14 +544,14 @@ Calibrate();
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Calibrate(void){
+void Orion_CC1101::Calibrate(void){
 
 if (MHz >= 300 && MHz <= 348){
 SpiWriteReg(CC1101_FSCTRL0, map(MHz, 300, 348, clb1[0], clb1[1]));
 if (MHz < 322.88){SpiWriteReg(CC1101_TEST0,0x0B);}
 else{
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = ELECHOUSE_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 1){setPA(pa);}
 }
@@ -561,7 +561,7 @@ SpiWriteReg(CC1101_FSCTRL0, map(MHz, 378, 464, clb2[0], clb2[1]));
 if (MHz < 430.5){SpiWriteReg(CC1101_TEST0,0x0B);}
 else{
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = ELECHOUSE_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 2){setPA(pa);}
 }
@@ -571,7 +571,7 @@ SpiWriteReg(CC1101_FSCTRL0, map(MHz, 779, 899, clb3[0], clb3[1]));
 if (MHz < 861){SpiWriteReg(CC1101_TEST0,0x0B);}
 else{
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = ELECHOUSE_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 3){setPA(pa);}
 }
@@ -579,7 +579,7 @@ if (last_pa != 3){setPA(pa);}
 else if (MHz >= 900 && MHz <= 928){
 SpiWriteReg(CC1101_FSCTRL0, map(MHz, 900, 928, clb4[0], clb4[1]));
 SpiWriteReg(CC1101_TEST0,0x09);
-int s = ELECHOUSE_cc1101.SpiReadStatus(CC1101_FSCAL2);
+int s = Orion_CC1101_cc1101.SpiReadStatus(CC1101_FSCAL2);
 if (s<32){SpiWriteReg(CC1101_FSCAL2, s+32);}
 if (last_pa != 4){setPA(pa);}
 }
@@ -590,7 +590,7 @@ if (last_pa != 4){setPA(pa);}
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setClb(byte b, byte s, byte e){
+void Orion_CC1101::setClb(byte b, byte s, byte e){
 if (b == 1){
 clb1[0]=s;
 clb1[1]=e;  
@@ -614,7 +614,7 @@ clb4[1]=e;
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-bool ELECHOUSE_CC1101::getCC1101(void){
+bool Orion_CC1101::getCC1101(void){
 setSpi();
 if (SpiReadStatus(0x31)>0){
 return 1;
@@ -628,7 +628,7 @@ return 0;
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-byte ELECHOUSE_CC1101::getMode(void){
+byte Orion_CC1101::getMode(void){
 return trxstate;
 }
 /****************************************************************
@@ -637,7 +637,7 @@ return trxstate;
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setSyncWord(byte sh, byte sl){
+void Orion_CC1101::setSyncWord(byte sh, byte sl){
 SpiWriteReg(CC1101_SYNC1, sh);
 SpiWriteReg(CC1101_SYNC0, sl);
 }
@@ -647,7 +647,7 @@ SpiWriteReg(CC1101_SYNC0, sl);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setAddr(byte v){
+void Orion_CC1101::setAddr(byte v){
 SpiWriteReg(CC1101_ADDR, v);
 }
 /****************************************************************
@@ -656,7 +656,7 @@ SpiWriteReg(CC1101_ADDR, v);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setPQT(byte v){
+void Orion_CC1101::setPQT(byte v){
 Split_PKTCTRL1();
 pc1PQT = 0;
 if (v>7){v=7;}
@@ -669,7 +669,7 @@ SpiWriteReg(CC1101_PKTCTRL1, pc1PQT+pc1CRC_AF+pc1APP_ST+pc1ADRCHK);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setCRC_AF(bool v){
+void Orion_CC1101::setCRC_AF(bool v){
 Split_PKTCTRL1();
 pc1CRC_AF = 0;
 if (v==1){pc1CRC_AF=8;}
@@ -681,7 +681,7 @@ SpiWriteReg(CC1101_PKTCTRL1, pc1PQT+pc1CRC_AF+pc1APP_ST+pc1ADRCHK);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setAppendStatus(bool v){
+void Orion_CC1101::setAppendStatus(bool v){
 Split_PKTCTRL1();
 pc1APP_ST = 0;
 if (v==1){pc1APP_ST=4;}
@@ -693,7 +693,7 @@ SpiWriteReg(CC1101_PKTCTRL1, pc1PQT+pc1CRC_AF+pc1APP_ST+pc1ADRCHK);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setAdrChk(byte v){
+void Orion_CC1101::setAdrChk(byte v){
 Split_PKTCTRL1();
 pc1ADRCHK = 0;
 if (v>3){v=3;}
@@ -706,7 +706,7 @@ SpiWriteReg(CC1101_PKTCTRL1, pc1PQT+pc1CRC_AF+pc1APP_ST+pc1ADRCHK);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setWhiteData(bool v){
+void Orion_CC1101::setWhiteData(bool v){
 Split_PKTCTRL0();
 pc0WDATA = 0;
 if (v == 1){pc0WDATA=64;}
@@ -718,7 +718,7 @@ SpiWriteReg(CC1101_PKTCTRL0, pc0WDATA+pc0PktForm+pc0CRC_EN+pc0LenConf);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setPktFormat(byte v){
+void Orion_CC1101::setPktFormat(byte v){
 Split_PKTCTRL0();
 pc0PktForm = 0;
 if (v>3){v=3;}
@@ -731,7 +731,7 @@ SpiWriteReg(CC1101_PKTCTRL0, pc0WDATA+pc0PktForm+pc0CRC_EN+pc0LenConf);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setCrc(bool v){
+void Orion_CC1101::setCrc(bool v){
 Split_PKTCTRL0();
 pc0CRC_EN = 0;
 if (v==1){pc0CRC_EN=4;}
@@ -743,7 +743,7 @@ SpiWriteReg(CC1101_PKTCTRL0, pc0WDATA+pc0PktForm+pc0CRC_EN+pc0LenConf);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setLengthConfig(byte v){
+void Orion_CC1101::setLengthConfig(byte v){
 Split_PKTCTRL0();
 pc0LenConf = 0;
 if (v>3){v=3;}
@@ -756,7 +756,7 @@ SpiWriteReg(CC1101_PKTCTRL0, pc0WDATA+pc0PktForm+pc0CRC_EN+pc0LenConf);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setPacketLength(byte v){
+void Orion_CC1101::setPacketLength(byte v){
 SpiWriteReg(CC1101_PKTLEN, v);
 }
 /****************************************************************
@@ -765,7 +765,7 @@ SpiWriteReg(CC1101_PKTLEN, v);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setDcFilterOff(bool v){
+void Orion_CC1101::setDcFilterOff(bool v){
 Split_MDMCFG2();
 m2DCOFF = 0;
 if (v==1){m2DCOFF=128;}
@@ -777,7 +777,7 @@ SpiWriteReg(CC1101_MDMCFG2, m2DCOFF+m2MODFM+m2MANCH+m2SYNCM);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setManchester(bool v){
+void Orion_CC1101::setManchester(bool v){
 Split_MDMCFG2();
 m2MANCH = 0;
 if (v==1){m2MANCH=8;}
@@ -789,7 +789,7 @@ SpiWriteReg(CC1101_MDMCFG2, m2DCOFF+m2MODFM+m2MANCH+m2SYNCM);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setSyncMode(byte v){
+void Orion_CC1101::setSyncMode(byte v){
 Split_MDMCFG2();
 m2SYNCM = 0;
 if (v>7){v=7;}
@@ -802,7 +802,7 @@ SpiWriteReg(CC1101_MDMCFG2, m2DCOFF+m2MODFM+m2MANCH+m2SYNCM);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setFEC(bool v){
+void Orion_CC1101::setFEC(bool v){
 Split_MDMCFG1();
 m1FEC=0;
 if (v==1){m1FEC=128;}
@@ -814,7 +814,7 @@ SpiWriteReg(CC1101_MDMCFG1, m1FEC+m1PRE+m1CHSP);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setPRE(byte v){
+void Orion_CC1101::setPRE(byte v){
 Split_MDMCFG1();
 m1PRE=0;
 if (v>7){v=7;}
@@ -827,7 +827,7 @@ SpiWriteReg(CC1101_MDMCFG1, m1FEC+m1PRE+m1CHSP);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setChannel(byte ch){
+void Orion_CC1101::setChannel(byte ch){
 chan = ch;
 SpiWriteReg(CC1101_CHANNR,   chan);
 }
@@ -837,7 +837,7 @@ SpiWriteReg(CC1101_CHANNR,   chan);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setChsp(float f){
+void Orion_CC1101::setChsp(float f){
 Split_MDMCFG1();
 byte MDMCFG0 = 0;
 m1CHSP = 0;
@@ -865,7 +865,7 @@ SpiWriteReg(20,MDMCFG0);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setRxBW(float f){
+void Orion_CC1101::setRxBW(float f){
 Split_MDMCFG4();
 int s1 = 3;
 int s2 = 3;
@@ -888,7 +888,7 @@ SpiWriteReg(16,m4RxBw+m4DaRa);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setDRate(float d){
+void Orion_CC1101::setDRate(float d){
 Split_MDMCFG4();
 float c = d;
 byte MDMCFG3 = 0;
@@ -917,7 +917,7 @@ SpiWriteReg(17,  MDMCFG3);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setDeviation(float d){
+void Orion_CC1101::setDeviation(float d){
 float f = 1.586914;
 float v = 0.19836425;
 int c = 0;
@@ -937,7 +937,7 @@ SpiWriteReg(21,c);
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Split_PKTCTRL1(void){
+void Orion_CC1101::Split_PKTCTRL1(void){
 int calc = SpiReadStatus(7);
 pc1PQT = 0;
 pc1CRC_AF = 0;
@@ -956,7 +956,7 @@ else {pc1ADRCHK = calc; i=1;}
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Split_PKTCTRL0(void){
+void Orion_CC1101::Split_PKTCTRL0(void){
 int calc = SpiReadStatus(8);
 pc0WDATA = 0;
 pc0PktForm = 0;
@@ -975,7 +975,7 @@ else {pc0LenConf = calc; i=1;}
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Split_MDMCFG1(void){
+void Orion_CC1101::Split_MDMCFG1(void){
 int calc = SpiReadStatus(19);
 m1FEC = 0;
 m1PRE = 0;
@@ -993,7 +993,7 @@ else {m1CHSP = calc; i=1;}
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Split_MDMCFG2(void){
+void Orion_CC1101::Split_MDMCFG2(void){
 int calc = SpiReadStatus(18);
 m2DCOFF = 0;
 m2MODFM = 0;
@@ -1012,7 +1012,7 @@ else{m2SYNCM = calc; i=1;}
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::Split_MDMCFG4(void){
+void Orion_CC1101::Split_MDMCFG4(void){
 int calc = SpiReadStatus(16);
 m4RxBw = 0;
 m4DaRa = 0;
@@ -1028,7 +1028,7 @@ else{m4DaRa = calc; i=1;}
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::RegConfigSettings(void) 
+void Orion_CC1101::RegConfigSettings(void) 
 {   
     SpiWriteReg(CC1101_FSCTRL1,  0x06);
     
@@ -1064,7 +1064,7 @@ void ELECHOUSE_CC1101::RegConfigSettings(void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SetTx(void)
+void Orion_CC1101::SetTx(void)
 {
   SpiStrobe(CC1101_SIDLE);
   SpiStrobe(CC1101_STX);        //start send
@@ -1076,7 +1076,7 @@ void ELECHOUSE_CC1101::SetTx(void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SetRx(void)
+void Orion_CC1101::SetRx(void)
 {
   SpiStrobe(CC1101_SIDLE);
   SpiStrobe(CC1101_SRX);        //start receive
@@ -1088,7 +1088,7 @@ void ELECHOUSE_CC1101::SetRx(void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SetTx(float mhz)
+void Orion_CC1101::SetTx(float mhz)
 {
   SpiStrobe(CC1101_SIDLE);
   setMHZ(mhz);
@@ -1101,7 +1101,7 @@ void ELECHOUSE_CC1101::SetTx(float mhz)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SetRx(float mhz)
+void Orion_CC1101::SetRx(float mhz)
 {
   SpiStrobe(CC1101_SIDLE);
   setMHZ(mhz);
@@ -1114,7 +1114,7 @@ void ELECHOUSE_CC1101::SetRx(float mhz)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-int ELECHOUSE_CC1101::getRssi(void)
+int Orion_CC1101::getRssi(void)
 {
 int rssi;
 rssi=SpiReadStatus(CC1101_RSSI);
@@ -1128,7 +1128,7 @@ return rssi;
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-byte ELECHOUSE_CC1101::getLqi(void)
+byte Orion_CC1101::getLqi(void)
 {
 byte lqi;
 lqi=SpiReadStatus(CC1101_LQI);
@@ -1140,7 +1140,7 @@ return lqi;
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setSres(void)
+void Orion_CC1101::setSres(void)
 {
   SpiStrobe(CC1101_SRES);
   trxstate=0;
@@ -1151,7 +1151,7 @@ void ELECHOUSE_CC1101::setSres(void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::setSidle(void)
+void Orion_CC1101::setSidle(void)
 {
   SpiStrobe(CC1101_SIDLE);
   trxstate=0;
@@ -1162,7 +1162,7 @@ void ELECHOUSE_CC1101::setSidle(void)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::goSleep(void){
+void Orion_CC1101::goSleep(void){
   trxstate=0;
   SpiStrobe(0x36);//Exit RX / TX, turn off frequency synthesizer and exit
   SpiStrobe(0x39);//Enter power down mode when CSn goes high.
@@ -1173,7 +1173,7 @@ void ELECHOUSE_CC1101::goSleep(void){
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SendData(char *txchar)
+void Orion_CC1101::SendData(char *txchar)
 {
 int len = strlen(txchar);
 byte chartobyte[len];
@@ -1186,7 +1186,7 @@ SendData(chartobyte,len);
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SendData(byte *txBuffer,byte size)
+void Orion_CC1101::SendData(byte *txBuffer,byte size)
 {
   //SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
@@ -1203,7 +1203,7 @@ void ELECHOUSE_CC1101::SendData(byte *txBuffer,byte size)
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SendData(char *txchar,int t)
+void Orion_CC1101::SendData(char *txchar,int t)
 {
 int len = strlen(txchar);
 byte chartobyte[len];
@@ -1216,7 +1216,7 @@ SendData(chartobyte,len,t);
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void ELECHOUSE_CC1101::SendData(byte *txBuffer,byte size,int t)
+void Orion_CC1101::SendData(byte *txBuffer,byte size,int t)
 {
   //SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
@@ -1232,7 +1232,7 @@ void ELECHOUSE_CC1101::SendData(byte *txBuffer,byte size,int t)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-bool ELECHOUSE_CC1101::CheckCRC(void){
+bool Orion_CC1101::CheckCRC(void){
 byte lqi=SpiReadStatus(CC1101_LQI);
 bool crc_ok = bitRead(lqi,7);
 if (crc_ok == 1){
@@ -1249,7 +1249,7 @@ return 0;
 *INPUT        :none
 *OUTPUT       :flag: 0 no data; 1 receive data 
 ****************************************************************/
-bool ELECHOUSE_CC1101::CheckRxFifo(int t){
+bool Orion_CC1101::CheckRxFifo(int t){
 if(trxstate!=2){SetRx();}
 if(SpiReadStatus(CC1101_RXBYTES) & BYTES_IN_RXFIFO){
 delay(t);
@@ -1264,7 +1264,7 @@ return 0;
 *INPUT        :none
 *OUTPUT       :flag: 0 no data; 1 receive data 
 ****************************************************************/
-byte ELECHOUSE_CC1101::CheckReceiveFlag(void)
+byte Orion_CC1101::CheckReceiveFlag(void)
 {
   if(trxstate!=2){SetRx();}
 	if(digitalRead(GDO0))			//receive data
@@ -1283,7 +1283,7 @@ byte ELECHOUSE_CC1101::CheckReceiveFlag(void)
 *INPUT        :rxBuffer: buffer to store data
 *OUTPUT       :size of data received
 ****************************************************************/
-bool ELECHOUSE_CC1101::ReceiveData(byte *rxBuffer, byte size)
+bool Orion_CC1101::ReceiveData(byte *rxBuffer, byte size)
 {
 	byte status[2];
 
@@ -1304,4 +1304,4 @@ bool ELECHOUSE_CC1101::ReceiveData(byte *rxBuffer, byte size)
     return 0;
 	}
 }
-ELECHOUSE_CC1101 ELECHOUSE_cc1101;
+Orion_CC1101 Orion_CC1101_cc1101;

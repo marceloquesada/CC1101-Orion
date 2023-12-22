@@ -45,7 +45,7 @@ void setup(){
 }
 
 byte buffer[999] = {};
-int read_size = 16; //Number of bytes to read from RX FIFO
+int read_size = 64; //Number of bytes to read from RX FIFO
 
 void loop(){
 

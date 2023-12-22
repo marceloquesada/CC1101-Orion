@@ -6,7 +6,6 @@
 #include <CC1101_Orion.h>
 
 void setup(){
-
     Serial.begin(9600);
     if (Orion_cc1101.getCC1101()){      // Check the CC1101 Spi connection.
     Serial.println("Connection OK");

@@ -146,6 +146,8 @@ public:
   void setRxBW(float f);
   void setDRate(float d);
   void setDeviation(float d);
+  void setAGC(void);
+  void setAGC(byte AGC0, byte AGC1, byte AGC2);
   void SetTx(void);
   void SetRx(void);
   void SetTx(float mhz);

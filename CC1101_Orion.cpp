@@ -1037,6 +1037,7 @@ void Orion_CC1101::RegConfigSettings(void)
     
     setCCMode(ccmode);
     setMHZ(MHz);
+    setAGC();
     
     SpiWriteReg(CC1101_MDMCFG1,  0x02);
     SpiWriteReg(CC1101_MDMCFG0,  0xF8);

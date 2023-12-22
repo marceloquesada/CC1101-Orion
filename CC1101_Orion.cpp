@@ -62,6 +62,9 @@ byte pc0WDATA;
 byte pc0PktForm;
 byte pc0CRC_EN;
 byte pc0LenConf;
+byte mAGC0;
+byte mAGC1;
+byte mAGC2;
 byte trxstate = 0;
 byte clb1[2]= {24,28};
 byte clb2[2]= {31,38};
@@ -1043,9 +1046,9 @@ void Orion_CC1101::RegConfigSettings(void)
     SpiWriteReg(CC1101_MCSM0 ,   0x18);
     SpiWriteReg(CC1101_FOCCFG,   0x16);
     SpiWriteReg(CC1101_BSCFG,    0x1C);
-    SpiWriteReg(CC1101_AGCCTRL2, 0xC7);
-    SpiWriteReg(CC1101_AGCCTRL1, 0x00);
-    SpiWriteReg(CC1101_AGCCTRL0, 0xB2);
+    //SpiWriteReg(CC1101_AGCCTRL2, 0xC7); // BROOOOOOOOOOOOOOO
+    //SpiWriteReg(CC1101_AGCCTRL1, 0x00); // Ignore this, i'll write our own function for this
+    //SpiWriteReg(CC1101_AGCCTRL0, 0xB2);
     SpiWriteReg(CC1101_FSCAL3,   0xE9);
     SpiWriteReg(CC1101_FSCAL2,   0x2A);
     SpiWriteReg(CC1101_FSCAL1,   0x00);
@@ -1304,6 +1307,31 @@ bool Orion_CC1101::ReceiveData(byte *rxBuffer, byte size)
 
     return 0;
 	}
+}
+/****************************************************************
+*FUNCTION NAME:setAGC
+*FUNCTION     :set Automatic Gain Control for RX
+*INPUT        :AGC0: Byte to be written to AGC_CTRL0
+*INPUT        :AGC1: Byte to be written to AGC_CTRL1
+*INPUT        :AGC2: Byte to be written to AGC_CTRL2
+*OUTPUT       : None
+****************************************************************/
+void Orion_CC1101::setAGC(byte AGC0, byte AGC1, byte AGC2){
+  mAGC0=0x91; mAGC1=0x49; mAGC2=0x43;
+  SpiWriteReg(CC1101_AGCCTRL0, AGC0);
+  SpiWriteReg(CC1101_AGCCTRL1, AGC1);
+  SpiWriteReg(CC1101_AGCCTRL2, AGC2);
+}
+/****************************************************************
+*FUNCTION NAME:setAGC
+*FUNCTION     :set Automatic Gain Control for RX to the values recommended by TI
+*INPUT        : None
+*OUTPUT       : None
+****************************************************************/
+void Orion_CC1101::setAGC(void){
+  SpiWriteReg(CC1101_AGCCTRL0, 0x91);
+  SpiWriteReg(CC1101_AGCCTRL1, 0x49);
+  SpiWriteReg(CC1101_AGCCTRL2, 0x43);
 }
 
 Orion_CC1101 Orion_cc1101;

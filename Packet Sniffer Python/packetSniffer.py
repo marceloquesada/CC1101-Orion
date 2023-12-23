@@ -97,10 +97,16 @@ print("Entrou")
 while latch:
     if ser.is_open == False:
         ser.open()
-    leitura = ser.readline()
-    #leitura = leitura.decode()
-    print(leitura)
-
+    travaTreansferencia = True
+    for registrador in registros:
+        print(registrador)
+        ordem = registrador[0]+','+registrador[1]+'\n'
+        ordem = ordem.encode('utf-8')
+        ser.write(ordem)
+        leitura = ser.readline()#.replace('\r\n','')
+        
+        print(leitura)
+    
 
     
 print('Finalizando programa...')

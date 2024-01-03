@@ -4,7 +4,7 @@ from serial.tools import list_ports
 from funcoesInternas import Separator
 
 #Variavel para selecionar o diretorio do arquivo
-diretorio = './Packet Sniffer Python/Registers-Config/'#'./Registers-Config/'
+diretorio = './Registers-Config/'#'./Packet Sniffer Python/Registers-Config/'
 
 #Iniciando biblioteca serial
 ser = serial.Serial()
@@ -77,7 +77,7 @@ while latch:
             print(port.device)
             tmpPort.append(port.device)
         #Receber a porta selecionada pelo usuario
-        portSelecionado = input("Selecione a porta COM para iniciar a transferencia (0 para sair): ")
+        portSelecionado = input("Selecione a porta COM para iniciar a transferencia (0 para sair, Enter para escanear novamente): ")
         if portSelecionado != '0':
             #Verificar se o port esta listado
             if portSelecionado in tmpPort:
@@ -97,16 +97,16 @@ print("Entrou")
 while latch:
     if ser.is_open == False:
         ser.open()
-    travaTreansferencia = True
     for registrador in registros:
-        print(registrador)
+        #print(registrador)
         ordem = registrador[0]+','+registrador[1]+'\n'
         ordem = ordem.encode('utf-8')
         ser.write(ordem)
         leitura = ser.readline()#.replace('\r\n','')
-        
-        print(leitura)
-    
+        if b'OK' in leitura:
+            print("Configuração de "+registrador[0]+" com "+registrador[1]+" bem sucedida")
+    print('Configuração de registradores finalizada!')
+    latch = False
 
     
 print('Finalizando programa...')

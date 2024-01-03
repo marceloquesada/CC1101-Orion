@@ -1,4 +1,4 @@
-//#include <ELECHOUSE_CC1101_SRC_DRV.h>
+#include <ELECHOUSE_CC1101_SRC_DRV.h>
 
 char convertChartoByte(char c){
   //Funcao para converter caractere para hexadecimal
@@ -63,6 +63,12 @@ void setup() {
   while (!Serial){
     ;//Esperar a comunicacao serial iniciar
   }
+  if (ELECHOUSE_cc1101.getCC1101()){      // Check the CC1101 Spi connection.
+    Serial.println("Connection OK");
+    }else{
+    Serial.println("Connection Error");
+    }
+  ELECHOUSE_cc1101.Init();
 }
 
 void loop() {
@@ -81,69 +87,38 @@ void loop() {
     //Converte os valores em byte
     /* 
     Ideia principal:
-    Cada byte é recebido pela serial, porém, o resultado está em hexa
-    Temos que separar 2 caracteres e colocá-los em um único byte
-    Após isso, temos que salvar no
+    Cada byte é recebido pela serial, porém, o resultado está em hexadecimal
+    Temos que separar os valores em valores nas variaveis do Arduino
     */
-    Serial.println(endereco+"+"+valor);
     //Para endereco
-    //Variaveis booleanos para controlar a entrada dos enderecos
-    bool slide = 0;
-    int push = 0;
     //Variavel para guardar os valores hexadecimais
-    char byteAddr[endereco.length()/2];
-    //Variavel temporaria para guardar valor entre iteracao
-    char temp;
+    char byteAddr = 0x00;
     //Para cada valor na variavel do endereco
     for(int i = 0; i < endereco.length();i++){
       char c = endereco.charAt(i);
       c = convertChartoByte(c);
-      if(slide == 1){
-        //Push
-        //Somar os dois valores
-        temp = temp | c;
-        //Retornar a variavel de slide
-        slide = 0;
-        //Coloca o valor no endereco
-        byteAddr[i/(int)2] = temp;
-      }
-      else{
-        //Slide
-        //Coloca o valor da
-        temp = c << 4;
-        slide = 1;
-      };
+      //Slide para a esquerda
+      byteAddr = (byteAddr << 4);
+      //Pelo tamanho da byteAddr, esse processo descartará os
+      //dois primeiros valores recebidos, que para o CC1101 será 0
+      //Coloca o valor dos 4 bits na variavel       
+      byteAddr = byteAddr | c;
     };
     //Para o valor a ser escrito
-    //Usando as mesmas variaveis antigas
-    //Para colocar valor
-    char byteValue[valor.length()/2];
+    //Variavel para guardar os valores hexadecimais
+    char byteValue = 0x00;
     for(int i = 0; i < valor.length();i++){
       char c = valor.charAt(i);
       c = convertChartoByte(c);
-      if(slide == 1){
-        //Push
-        //Somar os dois valores
-        temp = temp | c;
-        //Retornar a variavel de slide
-        slide = 0;
-        //Coloca o valor no endereco
-        byteValue[i/(int)2] = temp;
-      }
-      else{
-        //Slide
-        //Coloca o valor da
-        temp = c << 4;
-        slide = 1;
-      };
+      //Slide para a esquerda
+      byteValue = byteValue << 4;
+      //Coloca o valor dos 4 bits na variavel
+      byteValue = byteValue | c;
     };
-    for(int i = 0; i < sizeof(byteAddr);i++){
-      Serial.write(byteAddr[i]);
-    };
-    Serial.print("+");
-    for(int i = 0; i < sizeof(byteValue);i++){
-      Serial.write(byteValue[i]);
-    };
-    Serial.println("OK");
+    ELECHOUSE_cc1101.SpiWriteReg(byteAddr,byteValue);
+    Serial.write(byteAddr);
+    Serial.print("<-");
+    Serial.write(byteValue);
+    Serial.println(" OK");
   }
 }

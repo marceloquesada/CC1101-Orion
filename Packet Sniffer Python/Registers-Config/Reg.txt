@@ -14,12 +14,12 @@ ADDR           |0x0009|0x00|Device Address
 CHANNR         |0x000A|0x00|Channel Number
 FSCTRL1        |0x000B|0x06|Frequency Synthesizer Control
 FSCTRL0        |0x000C|0x00|Frequency Synthesizer Control
-FREQ2          |0x000D|0x21|Frequency Control Word, High Byte
-FREQ1          |0x000E|0x62|Frequency Control Word, Middle Byte
-FREQ0          |0x000F|0x76|Frequency Control Word, Low Byte
+FREQ2          |0x000D|0x10|Frequency Control Word, High Byte
+FREQ1          |0x000E|0xD8|Frequency Control Word, Middle Byte
+FREQ0          |0x000F|0x9D|Frequency Control Word, Low Byte
 MDMCFG4        |0x0010|0xF5|Modem Configuration
 MDMCFG3        |0x0011|0x83|Modem Configuration
-MDMCFG2        |0x0012|0x13|Modem Configuration
+MDMCFG2        |0x0012|0x33|Modem Configuration
 MDMCFG1        |0x0013|0x22|Modem Configuration
 MDMCFG0        |0x0014|0xF8|Modem Configuration
 DEVIATN        |0x0015|0x15|Modem Deviation Setting
@@ -35,7 +35,7 @@ WOREVT1        |0x001E|0x87|High Byte Event0 Timeout
 WOREVT0        |0x001F|0x6B|Low Byte Event0 Timeout
 WORCTRL        |0x0020|0xFB|Wake On Radio Control
 FREND1         |0x0021|0x56|Front End RX Configuration
-FREND0         |0x0022|0x10|Front End TX Configuration
+FREND0         |0x0022|0x11|Front End TX Configuration
 FSCAL3         |0x0023|0xE9|Frequency Synthesizer Calibration
 FSCAL2         |0x0024|0x2A|Frequency Synthesizer Calibration
 FSCAL1         |0x0025|0x00|Frequency Synthesizer Calibration

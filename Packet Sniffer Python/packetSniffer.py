@@ -30,9 +30,6 @@ def Listar():
             #Envia para o terminal
             print(documento)
 
-# def Transferir(registros):
-#     if ser.is
-
 #Latch para a interface no CMD
 latch = True
 #Variavel para registros
@@ -52,7 +49,7 @@ while latch:
         #Verificar se o documento faz parte dos arquivos no diretorio
         if arquivoSelecionado in documentos:
             #Utilizar a funcao para separar a
-            registros = Separator(open(diretorio+'/'+arquivoSelecionado).read())
+            registros,hardware = Separator(open(diretorio+'/'+arquivoSelecionado).read())
             #Informar o numero de registradores encontrados
             print(len(registros),'registradores encontrados')
             #Continuar pelo programa
@@ -65,48 +62,20 @@ while latch:
 #Continuando para configuracao do chip pelo arduino
 while latch:
     print('---------------------')
-    #Funcao para verificar portas
-    ports = list_ports.comports()
-    tmpPort = []
-    #Caso algum porte seja encontrado
-    if ports != []:
-        #Print indicando as portas
-        print("Portas encontradas:")
-        #Enviar para o usuario
-        for port in ports:
-            print(port.device)
-            tmpPort.append(port.device)
-        #Receber a porta selecionada pelo usuario
-        portSelecionado = input("Selecione a porta COM para iniciar a transferencia (0 para sair, Enter para escanear novamente): ")
-        if portSelecionado != '0':
-            #Verificar se o port esta listado
-            if portSelecionado in tmpPort:
-                ser.port = portSelecionado
-                break
-            else:
-                print("Port não encontrado")
-        else:
-            #Caso usuario queira sair
-            latch = False
-            break
-    else:
-        #Caso nenhuma porta seja encontrada
-        print("Nenhuma porta COM encontrada...")
-
-print("Entrou")
-while latch:
-    if ser.is_open == False:
-        ser.open()
-    for registrador in registros:
-        #print(registrador)
-        ordem = registrador[0]+','+registrador[1]+'\n'
-        ordem = ordem.encode('utf-8')
-        ser.write(ordem)
-        leitura = ser.readline()#.replace('\r\n','')
-        if b'OK' in leitura:
-            print("Configuração de "+registrador[0]+" com "+registrador[1]+" bem sucedida")
-    print('Configuração de registradores finalizada!')
-    latch = False
-
-    
+    with open('./Registers-Config/ArduinoCode.txt','w') as arquivo:
+        #Variaveis que serao escritas
+        typedef = []
+        spiRegConfig = []
+        for reg in registros:
+            #Escrever o define e o spi e salvar nas variaveis
+            varRegistrador = hardware+'_'+reg[0]
+            typedef.append('#define '+ varRegistrador+reg[1]+' //'+reg[3]+'\n')
+            #Retirar os espacos
+            varRegistrador = varRegistrador.replace(' ','')
+            spiRegConfig.append(f'SpiWriteReg({varRegistrador},{reg[2]});\n')
+        #Juntar as duas listas
+        output = typedef + ['---------------------------------------------------\n'] + spiRegConfig
+        #Salvar
+        arquivo.writelines(output)
+        latch = False
 print('Finalizando programa...')

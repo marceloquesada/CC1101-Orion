@@ -16,7 +16,9 @@ cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and 
 #ifndef CC1101_Orion_h
 #define CC1101_Orion_h
 
+
 #include <Arduino.h>
+#include <string>
 
 //***************************************CC1101 define**************************************************//
 // CC1101 CONFIG REGSITER
@@ -109,6 +111,10 @@ cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and 
 #define CC1101_PATABLE      0x3E
 #define CC1101_TXFIFO       0x3F
 #define CC1101_RXFIFO       0x3F
+#define CC1101_TXFIFO_SIZE  63
+
+// Declaring a byte datatype to make it easier to work with
+typedef unsigned char BYTE;
 
 //************************************* class **************************************************//
 class Orion_CC1101
@@ -159,6 +165,7 @@ public:
   void SendData(char *txchar);
   void SendData(byte *txBuffer, byte size, int t);
   void SendData(char *txchar, int t);
+  void SendLargePacket(byte *txBuffer, byte size);
   byte CheckReceiveFlag(void);
   bool ReceiveData(byte *rxBuffer, byte size);
   bool CheckCRC(void);

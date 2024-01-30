@@ -1188,7 +1188,7 @@ SendData(chartobyte,len);
 ****************************************************************/
 void Orion_CC1101::SendData(byte *txBuffer,byte size)
 {
-  //SpiWriteReg(CC1101_TXFIFO,size);
+  SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
   SpiStrobe(CC1101_SIDLE);
   SpiStrobe(CC1101_STX);                  //start send
@@ -1218,7 +1218,6 @@ SendData(chartobyte,len,t);
 ****************************************************************/
 void Orion_CC1101::SendData(byte *txBuffer,byte size,int t)
 {
-  //SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
   SpiStrobe(CC1101_SIDLE);
   SpiStrobe(CC1101_STX);                  //start send
@@ -1226,6 +1225,30 @@ void Orion_CC1101::SendData(byte *txBuffer,byte size,int t)
   SpiStrobe(CC1101_SFTX);                 //flush TXfifo
   trxstate=1;
 }
+void Orion_CC1101::SendLargePacket(byte *txBuffer, byte size){
+  // This function divides the array into multiple smaller arrays that fit into the TXFIFO to end them one at a time
+  for (int batch = 0; batch < size/CC1101_TXFIFO_SIZE; batch++)
+  {
+    byte batchBuffer[CC1101_TXFIFO_SIZE];
+    for (int i = 0; i < CC1101_TXFIFO_SIZE; i++)
+    {
+      batchBuffer[i] = txBuffer[i + CC1101_TXFIFO_SIZE*batch];
+    }
+    SendData(batchBuffer, (byte)CC1101_TXFIFO_SIZE);
+    delay(500);
+  }
+ int remainingBits = size%CC1101_TXFIFO_SIZE;
+ if (remainingBits > 0)
+  {
+    byte batchBuffer[remainingBits];
+    for (int i = 0; i < remainingBits; i++)
+    {
+      batchBuffer[i] = txBuffer[i + CC1101_TXFIFO_SIZE*(size/CC1101_TXFIFO_SIZE)];
+    }
+    SendData(batchBuffer, (byte)remainingBits);
+  }
+}
+
 /****************************************************************
 *FUNCTION NAME:Check CRC
 *FUNCTION     :none

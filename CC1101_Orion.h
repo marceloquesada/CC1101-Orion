@@ -111,7 +111,7 @@ cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and 
 #define CC1101_PATABLE      0x3E
 #define CC1101_TXFIFO       0x3F
 #define CC1101_RXFIFO       0x3F
-#define CC1101_TXFIFO_SIZE  63
+#define CC1101_TXFIFO_SIZE  61
 
 // Declaring a byte datatype to make it easier to work with
 typedef unsigned char BYTE;
@@ -160,12 +160,14 @@ public:
   byte getLqi(void);
   void setSres(void);
   void setSidle(void);
+  void getTemperature(uint8_t pin);
   void goSleep(void);
   void SendData(byte *txBuffer, byte size);
   void SendData(char *txchar);
-  void SendData(byte *txBuffer, byte size, int t);
-  void SendData(char *txchar, int t);
-  void SendLargePacket(byte *txBuffer, byte size);
+  void SendStandbyData(byte *txBuffer, byte size);
+  void standbyTX();
+  void closeTX();
+  //void SendLargePacket(byte *txBuffer, byte size);
   byte CheckReceiveFlag(void);
   bool ReceiveData(byte *rxBuffer, byte size);
   bool CheckCRC(void);

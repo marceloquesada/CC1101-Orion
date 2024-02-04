@@ -1198,34 +1198,34 @@ void Orion_CC1101::SendData(byte *txBuffer,byte size)
   trxstate=1;
 }
 /****************************************************************
-*FUNCTION NAME:Char direct SendData
-*FUNCTION     :use CC1101 send data without GDO
+*FUNCTION NAME:SendStandbyData
+*FUNCTION     :use CC1101 send data if the standby trnasmit preamble mode is used
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void Orion_CC1101::SendData(char *txchar,int t)
+// WORK IN PROGRESS | DO NOT USE
+void Orion_CC1101::SendStandbyData(byte *txBuffer, byte size) 
 {
-int len = strlen(txchar);
-byte chartobyte[len];
-for (int i = 0; i<len; i++){chartobyte[i] = txchar[i];}
-SendData(chartobyte,len,t);
+  SpiWriteReg(CC1101_TXFIFO,size);
+  SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size); 
+    while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
+  SpiStrobe(CC1101_SFTX);                     //flush TXfifo
+  //SpiStrobe(CC1101_STX);
 }
 /****************************************************************
-*FUNCTION NAME:SendData
-*FUNCTION     :use CC1101 send data without GDO
-*INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
+*FUNCTION NAME:standbyTX
+*FUNCTION     :Set TX mode in cc1101, which will start automatically transmitting preamble bytes
+*INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
-void Orion_CC1101::SendData(byte *txBuffer,byte size,int t)
+void Orion_CC1101::standbyTX()
 {
-  SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
   SpiStrobe(CC1101_SIDLE);
-  SpiStrobe(CC1101_STX);                  //start send
-  delay(t);
-  SpiStrobe(CC1101_SFTX);                 //flush TXfifo
-  trxstate=1;
+  SpiStrobe(CC1101_STX);
 }
-void Orion_CC1101::SendLargePacket(byte *txBuffer, byte size){
+
+// Non-sense written deliriously by a mad-man
+/* void Orion_CC1101::SendLargePacket(byte *txBuffer, byte size){
   // This function divides the array into multiple smaller arrays that fit into the TXFIFO to end them one at a time
   for (int batch = 0; batch < size/CC1101_TXFIFO_SIZE; batch++)
   {
@@ -1247,7 +1247,8 @@ void Orion_CC1101::SendLargePacket(byte *txBuffer, byte size){
     }
     SendData(batchBuffer, (byte)remainingBits);
   }
-}
+} */
+
 
 /****************************************************************
 *FUNCTION NAME:Check CRC

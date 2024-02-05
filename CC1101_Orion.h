@@ -134,6 +134,7 @@ private:
   void Split_MDMCFG2(void);
   void Split_MDMCFG4(void);
 public:
+  float Drate;
   void Init(void);
   byte SpiReadStatus(byte addr);
   void setSpiPin(byte sck, byte miso, byte mosi, byte ss);
@@ -162,8 +163,9 @@ public:
   void setSidle(void);
   void getTemperature(uint8_t pin);
   void goSleep(void);
-  void SendData(byte *txBuffer, byte size);
-  void SendData(char *txchar);
+  void SendPktData(byte *txBuffer, byte size);
+  void SendPktData(char *txchar);
+  void SendContData(byte *txBuffer, byte size);
   void SendStandbyData(byte *txBuffer, byte size);
   void standbyTX();
   void closeTX();

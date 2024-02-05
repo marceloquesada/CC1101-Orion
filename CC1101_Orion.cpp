@@ -398,17 +398,18 @@ void Orion_CC1101::setModul(byte modul){
 void Orion_CC1101::setCCMode(bool s){
 ccmode = s;
 if (ccmode == 1){
-SpiWriteReg(CC1101_IOCFG2,      0x0B);
-SpiWriteReg(CC1101_IOCFG0,      0x06);
-SpiWriteReg(CC1101_PKTCTRL0,    0x05);
-SpiWriteReg(CC1101_MDMCFG3,     0xF8);
-SpiWriteReg(CC1101_MDMCFG4,11+m4RxBw);
-}else{
-SpiWriteReg(CC1101_IOCFG2,      0x0D);
-SpiWriteReg(CC1101_IOCFG0,      0x0D);
-SpiWriteReg(CC1101_PKTCTRL0,    0x32);
-SpiWriteReg(CC1101_MDMCFG3,     0x93);
-SpiWriteReg(CC1101_MDMCFG4, 7+m4RxBw);
+  SpiWriteReg(CC1101_IOCFG2,      0x0B);
+  SpiWriteReg(CC1101_IOCFG0,      0x06);
+  SpiWriteReg(CC1101_PKTCTRL0,    0x05);
+  SpiWriteReg(CC1101_MDMCFG3,     0xF8);
+  SpiWriteReg(CC1101_MDMCFG4,11+m4RxBw);
+}
+else{
+  SpiWriteReg(CC1101_IOCFG2,      0x0D);
+  SpiWriteReg(CC1101_IOCFG0,      0x0D);
+  SpiWriteReg(CC1101_PKTCTRL0,    0x32);
+  SpiWriteReg(CC1101_MDMCFG3,     0x93);
+  SpiWriteReg(CC1101_MDMCFG4, 7+m4RxBw);
 }
 setModulation(modulation);
 }
@@ -723,6 +724,15 @@ Split_PKTCTRL0();
 pc0PktForm = 0;
 if (v>3){v=3;}
 pc0PktForm = v*16;
+switch (v)
+{
+  case 1:
+    SpiWriteReg(CC1101_IOCFG2, 0X0C);
+    break;
+  case 3:
+    SpiWriteReg(CC1101_IOCFG2, 0x0D);
+    break;
+}
 SpiWriteReg(CC1101_PKTCTRL0, pc0WDATA+pc0PktForm+pc0CRC_EN+pc0LenConf);
 }
 /****************************************************************
@@ -891,6 +901,7 @@ SpiWriteReg(16,m4RxBw+m4DaRa);
 void Orion_CC1101::setDRate(float d){
 Split_MDMCFG4();
 float c = d;
+Drate = d;
 byte MDMCFG3 = 0;
 if (c > 1621.83){c = 1621.83;}
 if (c < 0.0247955){c = 0.0247955;}
@@ -1168,25 +1179,25 @@ void Orion_CC1101::goSleep(void){
   SpiStrobe(0x39);//Enter power down mode when CSn goes high.
 }
 /****************************************************************
-*FUNCTION NAME:Char direct SendData
+*FUNCTION NAME:Char direct SendPktData
 *FUNCTION     :use CC1101 send data
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void Orion_CC1101::SendData(char *txchar)
+void Orion_CC1101::SendPktData(char *txchar)
 {
 int len = strlen(txchar);
 byte chartobyte[len];
 for (int i = 0; i<len; i++){chartobyte[i] = txchar[i];}
-SendData(chartobyte,len);
+SendPktData(chartobyte,len);
 }
 /****************************************************************
-*FUNCTION NAME:SendData
+*FUNCTION NAME:SendPktData
 *FUNCTION     :use CC1101 send data
 *INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
 *OUTPUT       :none
 ****************************************************************/
-void Orion_CC1101::SendData(byte *txBuffer,byte size)
+void Orion_CC1101::SendPktData(byte *txBuffer,byte size)
 {
   SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
@@ -1196,6 +1207,11 @@ void Orion_CC1101::SendData(byte *txBuffer,byte size)
     while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
   SpiStrobe(CC1101_SFTX);                 //flush TXfifo
   trxstate=1;
+}
+void Orion_CC1101::SendContData(byte *txBuffer, byte size){
+  digitalWrite(GDO0, 1);
+  delay(100);
+  digitalWrite(GDO0, 0);
 }
 /****************************************************************
 *FUNCTION NAME:SendStandbyData
@@ -1234,7 +1250,7 @@ void Orion_CC1101::standbyTX()
     {
       batchBuffer[i] = txBuffer[i + CC1101_TXFIFO_SIZE*batch];
     }
-    SendData(batchBuffer, (byte)CC1101_TXFIFO_SIZE);
+    SendPktData(batchBuffer, (byte)CC1101_TXFIFO_SIZE);
     delay(500);
   }
  int remainingBits = size%CC1101_TXFIFO_SIZE;
@@ -1245,7 +1261,7 @@ void Orion_CC1101::standbyTX()
     {
       batchBuffer[i] = txBuffer[i + CC1101_TXFIFO_SIZE*(size/CC1101_TXFIFO_SIZE)];
     }
-    SendData(batchBuffer, (byte)remainingBits);
+    SendPktData(batchBuffer, (byte)remainingBits);
   }
 } */
 

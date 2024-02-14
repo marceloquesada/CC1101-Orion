@@ -23,6 +23,7 @@ cc1101 Driver for RC Switch. Mod by Little Satan. With permission to modify and 
 #define   READ_BURST        0xC0            //read burst
 #define   BYTES_IN_RXFIFO   0x7F            //byte number in RXfifo
 #define   max_modul 6
+#define   preamble_byte     0xAA
 
 byte modulation = 2;
 byte frend0;
@@ -63,6 +64,9 @@ byte pc0PktForm;
 byte pc0CRC_EN;
 byte pc0LenConf;
 byte trxstate = 0;
+bool tx_on = 0;
+bool init_complete = 0;
+byte idleSeq[60];
 byte clb1[2]= {24,28};
 byte clb2[2]= {31,38};
 byte clb3[2]= {65,76};
@@ -165,6 +169,8 @@ void Orion_CC1101::Init(void)
   Reset();                    //CC1101 reset
   RegConfigSettings();            //CC1101 register config
   SpiEnd();
+  Serial.begin(9600);
+  Serial.println("SERIAL INTERNO OK");
 }
 /****************************************************************
 *FUNCTION NAME:SpiWriteReg
@@ -1119,6 +1125,29 @@ void Orion_CC1101::SetRx(float mhz)
   SpiStrobe(CC1101_SRX);        //start receive
   trxstate=2;
 }
+void Orion_CC1101::setIdleTX(void)
+{
+  attachInterrupt(digitalPinToInterrupt(GDO0), Orion_CC1101::handleTXInterrupt, FALLING);
+  // Fill idle array with preamble bytes
+  for (int i = 0; i < sizeof(idleSeq); i++)
+  {
+    idleSeq[i] = preamble_byte;
+  }
+  Serial.println("Interrupt setado.");
+}
+
+void Orion_CC1101::handleTXInterrupt(void)
+{
+  /* if (!tx_on && init_complete && false)
+  {
+    Orion_cc1101.SpiStrobe(CC1101_SFTX);   //Flush FIFO
+    Orion_cc1101.SpiWriteBurstReg(CC1101_TXFIFO,idleSeq,sizeof(idleSeq));      //write data to send
+    Orion_cc1101.SpiStrobe(CC1101_SIDLE);  // Reset transceiver parameters
+    Orion_cc1101.SpiStrobe(CC1101_STX);    // Send data
+    Serial.println("FUNÇÃO RODADA");
+  } */
+}
+
 /****************************************************************
 *FUNCTION NAME:RSSI Level
 *FUNCTION     :Calculating the RSSI Level
@@ -1186,10 +1215,10 @@ void Orion_CC1101::goSleep(void){
 ****************************************************************/
 void Orion_CC1101::SendPktData(char *txchar)
 {
-int len = strlen(txchar);
-byte chartobyte[len];
-for (int i = 0; i<len; i++){chartobyte[i] = txchar[i];}
-SendPktData(chartobyte,len);
+  int len = strlen(txchar);
+  byte chartobyte[len];
+  for (int i = 0; i<len; i++){chartobyte[i] = txchar[i];}
+  SendPktData(chartobyte,len);
 }
 /****************************************************************
 *FUNCTION NAME:SendPktData
@@ -1199,34 +1228,18 @@ SendPktData(chartobyte,len);
 ****************************************************************/
 void Orion_CC1101::SendPktData(byte *txBuffer,byte size)
 {
+  tx_on = true;
   SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
   SpiStrobe(CC1101_SIDLE);
-  SpiStrobe(CC1101_STX);                  //start send
-    while (!digitalRead(GDO0));               // Wait for GDO0 to be set -> sync transmitted  
-    while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
-  SpiStrobe(CC1101_SFTX);                 //flush TXfifo
-  trxstate=1;
-}
-void Orion_CC1101::SendContData(byte *txBuffer, byte size){
-  digitalWrite(GDO0, 1);
-  delay(100);
-  digitalWrite(GDO0, 0);
-}
-/****************************************************************
-*FUNCTION NAME:SendStandbyData
-*FUNCTION     :use CC1101 send data if the standby trnasmit preamble mode is used
-*INPUT        :txBuffer: data array to send; size: number of data to send, no more than 61
-*OUTPUT       :none
-****************************************************************/
-// WORK IN PROGRESS | DO NOT USE
-void Orion_CC1101::SendStandbyData(byte *txBuffer, byte size) 
-{
-  SpiWriteReg(CC1101_TXFIFO,size);
-  SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size); 
-    while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
-  SpiStrobe(CC1101_SFTX);                     //flush TXfifo
-  //SpiStrobe(CC1101_STX);
+  SpiStrobe(CC1101_STX);                  //start send  
+  Serial.println("DEBUG");   
+  while (!digitalRead(GDO0));               // Wait for GDO0 to be set -> sync transmitted  
+  while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
+  SpiStrobe(CC1101_SFTX);         
+  trxstate = 1;
+  tx_on = false;
+  init_complete = 1;
 }
 /****************************************************************
 *FUNCTION NAME:standbyTX
@@ -1234,6 +1247,7 @@ void Orion_CC1101::SendStandbyData(byte *txBuffer, byte size)
 *INPUT        :none
 *OUTPUT       :none
 ****************************************************************/
+// DO NOT USE
 void Orion_CC1101::standbyTX()
 {
   SpiStrobe(CC1101_SIDLE);

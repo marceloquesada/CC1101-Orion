@@ -161,11 +161,11 @@ public:
   byte getLqi(void);
   void setSres(void);
   void setSidle(void);
-  void getTemperature(uint8_t pin);
+  void setIdleTX(void);
+  static void ICACHE_RAM_ATTR handleTXInterrupt(void);
   void goSleep(void);
   void SendPktData(byte *txBuffer, byte size);
   void SendPktData(char *txchar);
-  void SendContData(byte *txBuffer, byte size);
   void SendStandbyData(byte *txBuffer, byte size);
   void standbyTX();
   void closeTX();

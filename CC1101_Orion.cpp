@@ -1225,14 +1225,8 @@ void Orion_CC1101::SendPktData(char *txchar)
 ****************************************************************/
 void Orion_CC1101::SendPktData(byte *txBuffer,byte size)
 {
-  /* SpiWriteReg(CC1101_TXFIFO,size);
-  SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
-  SpiStrobe(CC1101_SIDLE);
-  SpiStrobe(CC1101_STX);                  //start send  
-  while (!digitalRead(GDO0));               // Wait for GDO0 to be set -> sync transmitted  
-  while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
-  SpiStrobe(CC1101_SFTX);         
-  trxstate = 1; */
+  SpiStrobe(CC1101_SIDLE); // Force transmitter idle for termination of preable transmission
+
   SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
   SpiStrobe(CC1101_SIDLE);
@@ -1240,6 +1234,8 @@ void Orion_CC1101::SendPktData(byte *txBuffer,byte size)
     while (!digitalRead(GDO0));               // Wait for GDO0 to be set -> sync transmitted  
     while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
   SpiStrobe(CC1101_SFTX);                 //flush TXfifo
+
+  SpiStrobe(CC1101_STX);    //Let transmitter send preamble while idle
   trxstate=1;
 }
 /****************************************************************

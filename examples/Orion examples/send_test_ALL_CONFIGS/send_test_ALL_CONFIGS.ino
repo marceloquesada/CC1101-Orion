@@ -3,7 +3,7 @@
 // Pino da conexão GDO0
 #define GDO0 16
 
-byte tx_msg[40];
+byte tx_msg[60];
 
 void CCinit(){
   if (Orion_cc1101.getCC1101()){      // Check the CC1101 Spi connection.
@@ -52,7 +52,7 @@ void setup() {
 
   CCinit();
 
-  
+
 }
 
 void loop() {

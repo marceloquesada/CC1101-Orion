@@ -1251,6 +1251,9 @@ void Orion_CC1101::standbyTX()
   SpiStrobe(CC1101_STX);
 }
 
+
+
+
 // Non-sense written deliriously by a mad-man
 /* void Orion_CC1101::SendLargePacket(byte *txBuffer, byte size){
   // This function divides the array into multiple smaller arrays that fit into the TXFIFO to end them one at a time

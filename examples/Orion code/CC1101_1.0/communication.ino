@@ -35,7 +35,6 @@ void CCinit(int TxPower = 10){
   Orion_cc1101.setPQT(0);             // Preamble quality estimator threshold. The preamble quality estimator increases an internal counter by one each time a bit is received that is different from the previous bit, and decreases the counter by 8 each time a bit is received that is the same as the last bit. A threshold of 4∙PQT for this counter is used to gate sync word detection. When PQT=0 a sync word is always accepted.
   Orion_cc1101.setAppendStatus(0);    // When enabled, two status bytes will be appended to the payload of the packet. The status bytes contain RSSI and LQI values, as well as CRC OK.
 
-  Serial.println("Initialization successful, now in TX mode.");
   displayLine("Init OK.");
 }
 
@@ -44,7 +43,8 @@ void sendPacket()
   int upkeep = millis()/1000;
   float pres = bmp.readPressure();
   float temp = bmp.readTemperature();
-  unsigned char *packet = generatePacket(comm_status, upkeep, pres, temp, al);
+  float alt = getAltitude();
+  unsigned char *packet = generatePacket(comm_status, upkeep, pres, temp, alt, payload);
   Orion_cc1101.SendPktData(packet, sizeof(packet));
   displayLine("TX PKT OK");
 }

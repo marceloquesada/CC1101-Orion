@@ -21,6 +21,10 @@ void baromTest(){
   displayLine(("T:" + String(temperature) + "ºC P:" + String(pressure)));
 }
 
-void getAltitude(){
-  
+float getAltitude(){
+  float alt = bmp.readAltitude();
+  if (USE_RELATIVE_ALTITUDE){
+    alt = alt - GROUND_ALTITUDE;
+  }
+  return alt;
 }

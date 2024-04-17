@@ -1,4 +1,4 @@
-void CCinit(int TxPower = 10){
+void CCinit(int TxPower){
   if (Orion_cc1101.getCC1101()){      // Check the CC1101 Spi connection.
     Serial.println("CC1101 Connection OK");
     displayLine("TX connection OK");
@@ -83,7 +83,7 @@ unsigned char* generatePacket(bool comm_status, int upkeep, float pres, float te
   unsigned char *p_alt = (unsigned char *)&alt;
   for (int i = 0; i < sizeof(float); i++) {
     packet[p_index + i] = p_alt[i];
-  }~
+  }
   p_index+=sizeof(float);
 
   // Próximos 50 bytes representam o payload

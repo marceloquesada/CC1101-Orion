@@ -21,7 +21,7 @@ bool comm_status = true;
 int time_ref;
 int interval;
 
-char payload[] = 'Orion project, by: Lau Mar Mur Math Alic';
+char payload[] = "Orion project, by: Lau Mar Mur Math Alic";
 
 void setup() {
   Wire.begin(4, 5);
@@ -30,7 +30,7 @@ void setup() {
   if (SCREEN_ENABLED) {
     displayInit();
   }
-  CCinit();
+  CCinit(10);
   baromInit();
 }
 

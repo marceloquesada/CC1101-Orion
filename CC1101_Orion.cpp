@@ -1235,7 +1235,7 @@ void Orion_CC1101::SendPktData(byte *txBuffer,byte size)
     while (digitalRead(GDO0));                // Wait for GDO0 to be cleared -> end of packet
   SpiStrobe(CC1101_SFTX);                 //flush TXfifo
 
-  SpiStrobe(CC1101_STX);    //Let transmitter send preamble while idle
+  // SpiStrobe(CC1101_STX);    //Let transmitter send preamble while idle
   trxstate=1;
 }
 /****************************************************************

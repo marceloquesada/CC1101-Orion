@@ -1225,8 +1225,6 @@ void Orion_CC1101::SendPktData(char *txchar)
 ****************************************************************/
 void Orion_CC1101::SendPktData(byte *txBuffer,byte size)
 {
-  SpiStrobe(CC1101_SIDLE); // Force transmitter idle for termination of preable transmission
-
   SpiWriteReg(CC1101_TXFIFO,size);
   SpiWriteBurstReg(CC1101_TXFIFO,txBuffer,size);      //write data to send
   SpiStrobe(CC1101_SIDLE);

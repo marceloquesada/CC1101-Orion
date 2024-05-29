@@ -44,13 +44,13 @@ void sendPacket()
   float pres = bmp.readPressure();
   float temp = bmp.readTemperature();
   float alt = getAltitude();
-  unsigned char *packet = generatePacket(comm_status, upkeep, pres, temp, alt, payload);
+  generatePacket(comm_status, upkeep, pres, temp, alt, payload);
   Orion_cc1101.SendPktData(packet, sizeof(packet));
   displayLine("TX PKT OK");
 }
 
 // This function generates a byte array filled with received telemetry information
-unsigned char* generatePacket(bool comm_status, int upkeep, float pres, float temp, float alt, char payload[]){
+void generatePacket(bool comm_status, int upkeep, float pres, float temp, float alt, char payload[]){
   int packet_length = 1 + sizeof(int) + 3*sizeof(float) + sizeof(payload);
   unsigned char packet[packet_length];
 
@@ -90,6 +90,4 @@ unsigned char* generatePacket(bool comm_status, int upkeep, float pres, float te
   for (int i = 0; i < sizeof(payload); i++) {
     packet[p_index + i] = payload[i];
   }
-
-  return packet;
 }
